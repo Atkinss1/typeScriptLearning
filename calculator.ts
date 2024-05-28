@@ -15,6 +15,8 @@ const calculator = (a: number, b: number, op: Operation): number => {
   }
 }
 
+console.log(process.argv);
+
 try { 
   console.log(calculator(2, 4, 'add'));
 } catch (error: unknown) {
