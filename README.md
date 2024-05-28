@@ -5,4 +5,4 @@ In this repository, I am working my way through learning how to use typeScript t
 
 ### Resource
 
-I am using [Full Stack Open's typeScript chapter]([www.fullstackopen.com/en](https://fullstackopen.com/en/part9)) to walk through each step. Feel free to follow my progress!
+I am using *[Full Stack Open's typeScript chapter](https://fullstackopen.com/en/part9))* to walk through each step. Feel free to follow my progress!
