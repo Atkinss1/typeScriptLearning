@@ -98,13 +98,13 @@ const calculateExercises = function (dailyHours: number[], targetDailyHours: num
   }
 
   return {
-    periodLength: periodLength,
-    trainingDays: trainingDays,
-    success: success,
-    rating: rating,
-    ratingDescription: ratingDescription,
-    target: target,
-    average: average
+    periodLength,
+    trainingDays,
+    success,
+    rating,
+    ratingDescription,
+    target,
+    average
   }
 }
 
