@@ -31,12 +31,12 @@ const calculateBmi = function (heightCm: number, weightKg: number): string {
   return message;
 }
 
-interface bmiValues {
+interface BmiValues {
   heightCm: number,
   weightKg: number
 }
 
-const parseArgs = function (args: string[]): bmiValues {
+const parseArgs = function (args: string[]): BmiValues {
   if (args.length < 4) throw new Error('bmiCalculator requires height and weight arguments.');
   if (args.length > 4) throw new Error('Too many arguments. bmiCalculator requires only two arguments: height and weight.');
 
@@ -55,9 +55,9 @@ try {
   const results = calculateBmi(heightCm, weightKg);
   console.log(results);
 } catch (error) {
-  let errorMessage = 'Something went wrong..';
+  let errorMessage = 'Something went wrong: ';
   if (error instanceof Error) {
-    errorMessage += ': ' + error.message;
+    errorMessage += error.message;
   }
   console.log(errorMessage);
 }
