@@ -2,7 +2,7 @@
 
 // eg. console.log(calculateBmi(180, 74)) -> Normal (healthy weight)
 
-const calculateBmi = function (heightCm: number, weightKg: number): string {
+export const calculateBmi = function (heightCm: number, weightKg: number): string {
   const heightM = heightCm / 100;
   const bmi = weightKg / heightM ** 2;
 
