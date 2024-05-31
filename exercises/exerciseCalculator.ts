@@ -36,7 +36,7 @@ const parseExerciseArguments = function (args: string[]): ExerciseArguments {
   if (dailyHoursString.length !== 7) throw new Error(message);
 
   const dailyHours = dailyHoursString.map(hours => {
-    const parsedHours = Number(hours.replace(/[\[\],]/g, ''));
+    const parsedHours = Number(hours);
     if (isNaN(parsedHours)) {
       throw new Error(`${hours} is not a type Number. Please submit Numbers in the arguments.`);
     }
