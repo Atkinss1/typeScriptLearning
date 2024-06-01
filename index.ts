@@ -1,6 +1,17 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 const app = express();
-import { calculateBmi } from './exercises/bmiCalculator';
+import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
+
+interface BmiResults {
+  weight: number,
+  height: number,
+  bmi: string
+}
+
+interface BmiParams {
+  height: string,
+  weight: string
+}
 
 
 app.get('/ping', (_req, res) => { 
@@ -11,14 +22,32 @@ app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!');
 });
 
-app.get('/bmi/:height/:weight', (req, res) => {
-  type height = number;
-  type weight = number;
-  const { height, weight } = req.params;
-  if (!isNaN(Number(height)) && !isNaN(Number(weight))) {
-    const result = calculateBmi(Number(height), Number(weight));
-    return res.json(result);
-  }
+app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
+  try {
+    const height = req.query.height as string;
+    const weight = req.query.weight as string;
+    
+    if (height === undefined || weight === undefined) {
+      throw new Error('malformatted parameters');
+    }
+
+    const {heightCm, weightKg} = parseArgs([height, weight]);
+    const result = calculateBmi(heightCm, weightKg);
+    const response: BmiResults = {
+      weight: Number(weight),
+      height: Number(height),
+      bmi: result
+    }
+
+    res.json(response);
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+       res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: 'Unknown error occured' });
+    }
+  } 
 });
 
 const PORT = 3003;

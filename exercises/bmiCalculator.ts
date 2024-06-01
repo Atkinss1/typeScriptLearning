@@ -36,28 +36,15 @@ interface BmiValues {
   weightKg: number
 }
 
-const parseArgs = function (args: string[]): BmiValues {
-  if (args.length < 4) throw new Error('bmiCalculator requires height and weight arguments.');
-  if (args.length > 4) throw new Error('Too many arguments. bmiCalculator requires only two arguments: height and weight.');
+export const parseArgs = function (args: string[]): BmiValues {
+  if (args.length != 2) throw new Error('bmiCalculator requires height and weight arguments.');
 
-  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+  if (!isNaN(Number(args[0])) && !isNaN(Number(args[1]))) {
     return {
-      heightCm: Number(args[2]),
-      weightKg: Number(args[3])
+      heightCm: Number(args[0]),
+      weightKg: Number(args[1])
     }
   } else {
     throw new Error('One or both arguments entered are not numbers.');
   }
-}
-
-try {
-  const { heightCm, weightKg } = parseArgs(process.argv);
-  const results = calculateBmi(heightCm, weightKg);
-  console.log(results);
-} catch (error) {
-  let errorMessage = 'Something went wrong: ';
-  if (error instanceof Error) {
-    errorMessage += error.message;
-  }
-  console.log(errorMessage);
 }
