@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 const app = express();
 import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
-import { calculator } from './basics/calculator';
+import { calculator, Operation } from './basics/calculator';
 
 interface BmiResults {
   weight: number,
@@ -54,7 +54,19 @@ app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
 app.post('/calculate', (req: Request, res: Response) => {
   const { value1, value2, op } = req.body;
 
-  const result = calculator(value1, value2, op);
+  if (!value1 || isNaN(Number(value1))) {
+    res.status(400).send({ error: `${value1} is not a type Number.` });
+  }
+
+  if (!value2 || isNaN(Number(value2))) {
+    res.status(400).send({ error: `${value2} is not a type Number.` });
+  }
+
+  if (op !== 'multiply' || op !== 'add' || op !== 'subtract') {
+    res.status(400).send({ error: `${op} is not a valid operation. Choose multiply, add or subtract.` });
+  }
+
+  const result = calculator(Number(value1), Number(value2), op as Operation);
   res.send({ result });
  });
 
