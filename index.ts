@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 const app = express();
 import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
+import { calculator } from './basics/calculator';
 
 interface BmiResults {
   weight: number,
@@ -37,7 +38,7 @@ app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
       weight: Number(weight),
       height: Number(height),
       bmi: result
-    }
+    };
 
     res.json(response);
 
@@ -49,6 +50,13 @@ app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
     }
   } 
 });
+
+app.post('/calculate', (req: Request, res: Response) => {
+  const { value1, value2, op } = req.body;
+
+  const result = calculator(value1, value2, op);
+  res.send({ result });
+ });
 
 const PORT = 3003;
 

@@ -53,7 +53,7 @@ const parseExerciseArguments = function (args: string[]): ExerciseArguments {
     dailyHours,
     target
   };
-}
+};
 
 
 const calculateExercises = function (dailyHours: number[], targetDailyHours: number): ExerciseMetrics {
@@ -65,23 +65,21 @@ const calculateExercises = function (dailyHours: number[], targetDailyHours: num
   let rating;
   let ratingDescription;
   const target = targetDailyHours;
-  let average;
-  let score;
 
   dailyHours.forEach((hours) => {
     if (hours !== 0) {
       trainingDays++;
       totalTrainingHours = totalTrainingHours + hours;
     }
-  })
+  });
 
-  average = totalTrainingHours / trainingDays;
+  const average = totalTrainingHours / trainingDays;
 
   if (average >= target) {
     success = true;
   }
   
-  score = average / target;
+  const score = average / target;
 
   switch (true) {
     case (score >= 0.9 && score <= 1.1):
@@ -105,8 +103,8 @@ const calculateExercises = function (dailyHours: number[], targetDailyHours: num
     ratingDescription,
     target,
     average
-  }
-}
+  };
+};
 
 try {
   
@@ -120,4 +118,4 @@ try {
     errorMessage += error.message;
   }
   console.log(errorMessage);
- }
+}

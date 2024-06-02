@@ -29,7 +29,7 @@ export const calculateBmi = function (heightCm: number, weightKg: number): strin
   }
 
   return message;
-}
+};
 
 interface BmiValues {
   heightCm: number,
@@ -43,8 +43,8 @@ export const parseArgs = function (args: string[]): BmiValues {
     return {
       heightCm: Number(args[0]),
       weightKg: Number(args[1])
-    }
+    };
   } else {
     throw new Error('One or both arguments entered are not numbers.');
   }
-}
+};
