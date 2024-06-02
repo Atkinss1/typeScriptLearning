@@ -1,7 +1,9 @@
 import express, {Request, Response} from 'express';
 const app = express();
 import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
-import { calculator, Operation } from './basics/calculator';
+import { calculator } from './basics/calculator';
+
+app.use(express.json());
 
 interface BmiResults {
   weight: number,
@@ -14,6 +16,17 @@ interface BmiParams {
   weight: string
 }
 
+interface CalculateRequestBody {
+  value1: number,
+  value2: number,
+  op: 'multiply' | 'add' | 'divide' | 'subtract'
+}
+
+// generic interface to create a flexible and reusable interface. <T> is a placeholder that you can pass a new interface to such as <CalculateRequestBody> to define the type structure body is expecting.
+
+interface TypedRequest<T> extends Request {
+  body: T;
+}
 
 app.get('/ping', (_req, res) => { 
   res.send('pong');
@@ -51,22 +64,23 @@ app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
   } 
 });
 
-app.post('/calculate', (req: Request, res: Response) => {
+app.post('/calculate', (req: TypedRequest<CalculateRequestBody>, res: Response) => {
+  
   const { value1, value2, op } = req.body;
 
-  if (!value1 || isNaN(Number(value1))) {
+  if (value1 === undefined || value2 === undefined || op === undefined) {
+    res.status(400).send({ error: 'missing paramters' });
+  }
+
+  if (isNaN(Number(value1))) {
     res.status(400).send({ error: `${value1} is not a type Number.` });
   }
 
-  if (!value2 || isNaN(Number(value2))) {
+  if (isNaN(Number(value2))) {
     res.status(400).send({ error: `${value2} is not a type Number.` });
   }
 
-  if (op !== 'multiply' || op !== 'add' || op !== 'subtract') {
-    res.status(400).send({ error: `${op} is not a valid operation. Choose multiply, add or subtract.` });
-  }
-
-  const result = calculator(Number(value1), Number(value2), op as Operation);
+  const result = calculator(Number(value1), Number(value2), op);
   res.send({ result });
  });
 
