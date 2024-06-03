@@ -2,6 +2,8 @@ import express, {Request, Response} from 'express';
 const app = express();
 import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
 import { calculator } from './basics/calculator';
+import { calculateExercises, ExerciseArguments } from './exercises/exerciseCalculator';
+import { parseExerciseArguments } from './helper functions/validateExerciseArguments';
 
 // middleware for incoming json requests
 app.use(express.json());
@@ -82,7 +84,7 @@ app.post('/calculate', (req: TypedRequest<CalculateRequestBody>, res: Response) 
 
     const result = calculator(Number(value1), Number(value2), op);
     
-    res.send({ result });
+    res.status(200).send({ result });
   }
   catch (error: unknown) { 
     if (error instanceof Error) {
@@ -92,6 +94,26 @@ app.post('/calculate', (req: TypedRequest<CalculateRequestBody>, res: Response) 
     }
   }
 });
+
+app.post('/exercises', (req: TypedRequest<ExerciseArguments>, res: Response) => {
+  const { daily_exercises, target } = req.body;
+  try{
+    
+    parseExerciseArguments(daily_exercises, target);
+
+    const result = calculateExercises(daily_exercises, target);
+    
+    res.status(200).send(result);
+
+   } catch (error) {
+     if (error instanceof Error) {
+       res.status(400).json({ error: error.message });  
+     } else {
+       res.status(400).json({ error: 'Unknown error occured.' });
+     }
+    
+  }
+ });
   
   
 
