@@ -3,26 +3,30 @@ const app = express();
 import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
 import { calculator } from './basics/calculator';
 
+// middleware for incoming json requests
 app.use(express.json());
 
+// interface for bmi GET response
 interface BmiResults {
   weight: number,
   height: number,
   bmi: string
 }
 
+// interface for bmi GET request
 interface BmiParams {
   height: string,
   weight: string
 }
 
+// interface for calculate POST request
 interface CalculateRequestBody {
   value1: number,
   value2: number,
   op: 'multiply' | 'add' | 'divide' | 'subtract'
 }
 
-// generic interface to create a flexible and reusable interface. <T> is a placeholder that you can pass a new interface to such as <CalculateRequestBody> to define the type structure body is expecting.
+// generic interface to create a flexible and reusable interface. <T> is a placeholder that you can pass a new interface to such as <CalculateRequestBody> to define the type structure req.body is expecting.
 
 interface TypedRequest<T> extends Request {
   body: T;
@@ -65,24 +69,31 @@ app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
 });
 
 app.post('/calculate', (req: TypedRequest<CalculateRequestBody>, res: Response) => {
+  try {
+    const { value1, value2, op } = req.body;
+
+    if (value1 === undefined || value2 === undefined || op === undefined) {
+      throw new Error(`A parameter is undefined.`);
+    }
+
+    if (isNaN(Number(value1)) || isNaN(Number(value2))) {
+      throw new Error(`A parameter is not a type Number.`);
+    }
+
+    const result = calculator(Number(value1), Number(value2), op);
+    
+    res.send({ result });
+  }
+  catch (error: unknown) { 
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: 'Unknown error occured' });
+    }
+  }
+});
   
-  const { value1, value2, op } = req.body;
-
-  if (value1 === undefined || value2 === undefined || op === undefined) {
-    res.status(400).send({ error: 'missing paramters' });
-  }
-
-  if (isNaN(Number(value1))) {
-    res.status(400).send({ error: `${value1} is not a type Number.` });
-  }
-
-  if (isNaN(Number(value2))) {
-    res.status(400).send({ error: `${value2} is not a type Number.` });
-  }
-
-  const result = calculator(Number(value1), Number(value2), op);
-  res.send({ result });
- });
+  
 
 const PORT = 3003;
 
