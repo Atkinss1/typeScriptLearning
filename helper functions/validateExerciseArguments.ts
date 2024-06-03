@@ -4,15 +4,13 @@ export const parseExerciseArguments = function (daily_exercises: number[], targe
 
   if (daily_exercises.length !== 7) throw new Error(message);
 
-  for (const hours of daily_exercises) {
-    if (isNaN(hours)) {
-      throw new Error(`${hours} is not a type Number. Please submit Numbers in the arguments.`);
+  daily_exercises.forEach((day, index) => {
+    if (typeof (day) !== 'number') {
+      throw new Error(`${day} is not a type Number at index ${index}. Please submit Numbers in the arguments.`);
     }
-  }
+  });
 
-  const targetHours = Number(target);
-
-  if (isNaN(Number(targetHours))) {
+  if (isNaN(Number(target))) {
     throw new Error(`${target} is not a type Number. Please submit Numbers in the arguments.`);
   }
 };
