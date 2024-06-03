@@ -1,6 +1,4 @@
-import { ExerciseArguments } from "../exercises/exerciseCalculator";
-
-export const parseExerciseArguments = function (daily_exercises: number[], target: number): ExerciseArguments {
+export const parseExerciseArguments = function (daily_exercises: number[], target: number) {
   
   const message = `You have provided ${daily_exercises.length} arguments in your Array of hours, exerciseCalculator requires you to report hours for 7 days of the week and your daily target.`;
 
@@ -17,9 +15,4 @@ export const parseExerciseArguments = function (daily_exercises: number[], targe
   if (isNaN(Number(targetHours))) {
     throw new Error(`${target} is not a type Number. Please submit Numbers in the arguments.`);
   }
-
-  return {
-    daily_exercises,
-    target
-  };
 };
