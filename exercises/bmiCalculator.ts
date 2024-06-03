@@ -2,7 +2,14 @@
 
 // eg. console.log(calculateBmi(180, 74)) -> Normal (healthy weight)
 
-export const calculateBmi = function (heightCm: number, weightKg: number): string {
+// interface for bmi GET response
+interface BmiResults {
+  height: number,
+  weight: number,
+  bmi: string
+}
+
+export const calculateBmi = function (heightCm: number, weightKg: number): BmiResults {
   const heightM = heightCm / 100;
   const bmi = weightKg / heightM ** 2;
 
@@ -28,23 +35,11 @@ export const calculateBmi = function (heightCm: number, weightKg: number): strin
       message = 'Class 3 obesity';
   }
 
-  return message;
-};
+  const results: BmiResults = {
+    height: heightCm,
+    weight: weightKg,
+    bmi: message
+  };
 
-interface BmiValues {
-  heightCm: number,
-  weightKg: number
-}
-
-export const parseArgs = function (args: string[]): BmiValues {
-  if (args.length != 2) throw new Error('bmiCalculator requires height and weight arguments.');
-
-  if (!isNaN(Number(args[0])) && !isNaN(Number(args[1]))) {
-    return {
-      heightCm: Number(args[0]),
-      weightKg: Number(args[1])
-    };
-  } else {
-    throw new Error('One or both arguments entered are not numbers.');
-  }
+  return results;
 };

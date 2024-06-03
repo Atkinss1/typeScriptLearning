@@ -13,6 +13,6 @@ export const calculator = (a: number, b: number, op: Operation): number => {
     case 'subtract':
       return a - b;
     default:
-      throw new Error('Operation is not multiply, add or divide!');
+      throw new Error('Operation is not multiply, add, divide or subtract!');
   }
 };

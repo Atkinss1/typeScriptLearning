@@ -1,19 +1,15 @@
 import express, {Request, Response} from 'express';
 const app = express();
-import { calculateBmi, parseArgs } from './exercises/bmiCalculator';
+import { calculateBmi } from './exercises/bmiCalculator';
 import { calculator } from './basics/calculator';
 import { calculateExercises, ExerciseArguments } from './exercises/exerciseCalculator';
 import { parseExerciseArguments } from './helper functions/validateExerciseArguments';
+import { validateCalculatorArguments } from './helper functions/validateCalculatorArguments';
+import { validateBmiArguments } from './helper functions/validateBmiArguments';
 
 // middleware for incoming json requests
 app.use(express.json());
 
-// interface for bmi GET response
-interface BmiResults {
-  weight: number,
-  height: number,
-  bmi: string
-}
 
 // interface for bmi GET request
 interface BmiParams {
@@ -44,22 +40,14 @@ app.get('/hello', (_req, res) => {
 
 app.get('/bmi', (req: Request<BmiParams>, res: Response) => {
   try {
-    const height = req.query.height as string;
-    const weight = req.query.weight as string;
+    const height = req.query.height;
+    const weight = req.query.weight;
+
+    validateBmiArguments(Number(height), Number(weight));
     
-    if (height === undefined || weight === undefined) {
-      throw new Error('malformatted parameters');
-    }
+    const result = calculateBmi(Number(height), Number(weight));
 
-    const {heightCm, weightKg} = parseArgs([height, weight]);
-    const result = calculateBmi(heightCm, weightKg);
-    const response: BmiResults = {
-      weight: Number(weight),
-      height: Number(height),
-      bmi: result
-    };
-
-    res.json(response);
+    res.json({ result });
 
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -74,13 +62,7 @@ app.post('/calculate', (req: TypedRequest<CalculateRequestBody>, res: Response) 
   try {
     const { value1, value2, op } = req.body;
 
-    if (value1 === undefined || value2 === undefined || op === undefined) {
-      throw new Error(`A parameter is undefined.`);
-    }
-
-    if (isNaN(Number(value1)) || isNaN(Number(value2))) {
-      throw new Error(`A parameter is not a type Number.`);
-    }
+    validateCalculatorArguments(value1, value2, op);
 
     const result = calculator(Number(value1), Number(value2), op);
     
@@ -111,7 +93,6 @@ app.post('/exercises', (req: TypedRequest<ExerciseArguments>, res: Response) => 
      } else {
        res.status(400).json({ error: 'Unknown error occured.' });
      }
-    
   }
  });
   
