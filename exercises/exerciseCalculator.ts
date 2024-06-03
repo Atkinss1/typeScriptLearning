@@ -11,7 +11,7 @@ a text value explaining the rating, you can come up with the explanations
 
 */
 
-interface ExerciseMetrics {
+export interface ExerciseMetrics {
   periodLength: number,
   trainingDays: number,
   success: boolean,
@@ -21,12 +21,12 @@ interface ExerciseMetrics {
   average: number
 }
 
-interface ExerciseArguments {
-  dailyHours: number[],
+export interface ExerciseArguments {
+  daily_exercises: number[],
   target: number
 }
 
-const parseExerciseArguments = function (args: string[]): ExerciseArguments {
+export const parseCLExerciseArguments = function (args: string[]): ExerciseArguments {
 
   const dailyHoursString = args.slice(2, -1);
   const targetString = args[args.length - 1];
@@ -35,7 +35,7 @@ const parseExerciseArguments = function (args: string[]): ExerciseArguments {
 
   if (dailyHoursString.length !== 7) throw new Error(message);
 
-  const dailyHours = dailyHoursString.map(hours => {
+  const daily_exercises = dailyHoursString.map(hours => {
     const parsedHours = Number(hours);
     if (isNaN(parsedHours)) {
       throw new Error(`${hours} is not a type Number. Please submit Numbers in the arguments.`);
@@ -50,13 +50,13 @@ const parseExerciseArguments = function (args: string[]): ExerciseArguments {
   }
 
   return {
-    dailyHours,
+    daily_exercises,
     target
   };
 };
 
 
-const calculateExercises = function (dailyHours: number[], targetDailyHours: number): ExerciseMetrics {
+export const calculateExercises = function (dailyHours: number[], targetDailyHours: number): ExerciseMetrics {
   
   const periodLength = dailyHours.length;
   let trainingDays = 0;
@@ -73,7 +73,7 @@ const calculateExercises = function (dailyHours: number[], targetDailyHours: num
     }
   });
 
-  const average = totalTrainingHours / trainingDays;
+  const average = totalTrainingHours / dailyHours.length;
 
   if (average >= target) {
     success = true;
@@ -105,17 +105,3 @@ const calculateExercises = function (dailyHours: number[], targetDailyHours: num
     average
   };
 };
-
-try {
-  
-  const { dailyHours, target } = parseExerciseArguments(process.argv);
-  
-  const results = calculateExercises(dailyHours, target);
-  console.log(results);
-} catch (error) { 
-  let errorMessage = 'Something went wrong: ';
-  if (error instanceof Error) {
-    errorMessage += error.message;
-  }
-  console.log(errorMessage);
-}
